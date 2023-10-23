@@ -1,0 +1,19 @@
+{
+  "name": "@yajs/cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "bin": {
+    "yajs": "index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "adm-zip": "^0.5.10",
+    "axios": "^1.5.1",
+    "commander": "^11.0.0",
+    "typescript": "^5.2.2"
+  }
+}

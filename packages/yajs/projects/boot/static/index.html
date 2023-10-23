@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Yajs Boot</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link rel="stylesheet" title="default" href="https://cdn.jsdelivr.net/npm/amis@3.1.1/sdk/sdk.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/amis@3.1.1/sdk/helper.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/amis@3.1.1/sdk/iconfont.css" />
+    <script src="https://cdn.jsdelivr.net/npm/amis@3.1.1/sdk/sdk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-sha1@0.6.0/src/sha1.min.js"></script>
+    <style>
+        html,
+        body,
+        .app-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root" class="app-wrapper"></div>
+    <script>
+        (function () {
+            let amis = amisRequire('amis/embed');
+            const tokenKey = 'admin-token'
+            const app = {
+                "type": "page",
+                "body": [
+                    {
+                        "type": "wrapper",
+                        body: [
+                            {
+                                type: "wrapper",
+                                body: [
+                                    {
+                                        "type": "input-password",
+                                        "name": "token",
+                                        "label": "Token",
+
+                                    },
+                                    {
+                                        "label": "保存token",
+                                        "type": "button",
+                                        className: "mr-2",
+                                        "level": "primary",
+                                        onEvent: {
+                                            click: {
+                                                actions: [
+                                                    {
+                                                        "actionType": "custom",
+                                                        "script": `localStorage.setItem('${tokenKey}',event.data.token)`
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "label": "重置token",
+                                        "type": "button",
+                                        onEvent: {
+                                            click: {
+                                                actions: [
+                                                    {
+                                                        "actionType": "custom",
+                                                        "script": `context.props.store.updateData({${tokenKey}:''});localStorage.setItem('${tokenKey}','')`
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                ]
+                            },
+                            {
+                                "type": "input-text",
+                                "name": "project",
+                                "label": "项目名：",
+                                "visibleOn": "${token}",
+                            },
+                            {
+                                type: 'tabs',
+                                "visibleOn": "${project}",
+                                "mode": "card",
+                                tabs: [
+                                    {
+                                        "title": "部署函数",
+                                        "hash": "tab1",
+                                        "body": {
+                                            "name": "file",
+                                            "type": "input-file",
+                                            "label": "zip压缩包：",
+                                            "accept": ".zip",
+                                            "receiver": {
+                                                url: "/api/boot/func?action=depolyZip&project=${project}"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "title": "下线项目",
+                                        "hash": "tab2",
+                                        "body": {
+                                            "label": "下线",
+                                            "type": "action",
+                                            "actionType": "download",
+                                            "api": {
+                                                url: "/api/boot/func?action=down&project=${project}"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "title": "下载项目",
+                                        "hash": "tab3",
+                                        "body": {
+                                            "label": "下载",
+                                            "type": "action",
+                                            "actionType": "download",
+                                            "api": {
+                                                url: "/api/boot/func?action=pkg&project=${project}"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "title": "函数更改",
+                                        "hash": "tab4",
+                                        "body": {
+                                            "type": "form",
+                                            "api": {
+                                                url: "/api/boot/func?action=depolyOne&project=${project}"
+                                            },
+                                            "body": [
+                                                {
+                                                    "type": "input-text",
+                                                    "name": "name",
+                                                    "label": "名称："
+                                                },
+                                                {
+                                                    "name": "code",
+                                                    "type": "editor",
+                                                    "label": "代码："
+                                                },
+                                                {
+                                                    "name": "status",
+                                                    "type": "switch",
+                                                    "label": "开启",
+                                                    value: true
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "title": "Secret",
+                                        "hash": "tab5",
+                                        "body": {
+                                            "type": "form",
+                                            "api": {
+                                                url: "/api/boot/func?action=secret&project=${project}"
+                                            },
+                                            "body": [
+                                                {
+                                                    "name": "secret",
+                                                    "type": "editor",
+                                                    "label": "Secret",
+                                                    "language": "json"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "title": "静态资源部署",
+                                        "hash": "tab6",
+                                        "body": {
+                                            "name": "file",
+                                            "type": "input-file",
+                                            "label": "zip文件",
+                                            "accept": ".zip",
+                                            "receiver": {
+                                                url: "/api/boot/func?action=depolyStatic&project=${project}"
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                ]
+            }
+            const token = localStorage.getItem(tokenKey)
+            let amisInstance = amis.embed(
+                '#root',
+                app,
+                { data: { token } },
+                {
+                    requestAdaptor(api) {
+                        const time = Math.floor(new Date().getTime() / 1000)
+                        const str = [token, time].join(',')
+                        api.headers.sign = sha1(str)
+                        api.headers.time = time
+                        delete api.data.token
+                        return api;
+                    }
+                }
+            );
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+# 公网注意端口和更改密码
+version: "3.8"
+
+services:
+  traefik:
+    # The official v2 Traefik docker image
+    image: traefik:v2.1
+    # 启用dashboard并使用docker作为provider
+    command:
+     #- "--api.insecure=true"
+     - "--providers.docker"
+     - "--entrypoints.http.address=:80"
+     - "--entrypoints.https.address=:443"
+     # ACME信息
+     - "--certificatesresolvers.myssl.acme.httpchallenge=true"
+     - "--certificatesresolvers.myssl.acme.httpchallenge.entrypoint=http"
+     - "--certificatesresolvers.myssl.acme.email=1156909789@qq.com"
+     - "--certificatesresolvers.myssl.acme.storage=/letsencrypt/acme.json"
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The Web UI (enabled by --api.insecure=true)
+      #- "8080:8080"
+      - "443:443"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "./letsencrypt:/letsencrypt"
+  yajs:
+    # 展示ip地址的容器
+    image: yajs
+    labels:
+      - "traefik.http.routers.yajs.rule=Host(`xxx.com`)"
+      - "traefik.http.routers.yajs.tls.certresolver=myssl"
+      - "traefik.http.routers.yajs.entrypoints=https"
+      - "traefik.http.middlewares.yajs.compress=true"
+      - "traefik.http.routers.yajs.middlewares=yajs"
+    volumes:
+      - ./yajs:/yajs
+      - ./public:/app/public
+    environment:
+      - sqlite=/yajs/sql
+      - cacheFile=/yajs/kv
+      - token=123456

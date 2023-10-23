@@ -1,0 +1,8 @@
+{
+    "name": "yajs-root",
+    "workspaces": [
+        "packages/yajs",
+        "packages/cli"
+    ],
+    "private": true
+}
