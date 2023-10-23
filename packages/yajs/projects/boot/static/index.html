@@ -89,6 +89,35 @@
                                 "visibleOn": "${project}",
                                 "mode": "card",
                                 tabs: [
+                                {
+                                        "title": "函数更改",
+                                        "hash": "tab4",
+                                        "body": {
+                                            "type": "form",
+                                            "api": {
+                                                url: "/api/boot/func?action=depolyOne&project=${project}"
+                                            },
+                                            "body": [
+                                                {
+                                                    "type": "input-text",
+                                                    "name": "name",
+                                                    "label": "名称：",
+                                                    "placeholder": "请输入名称"
+                                                },
+                                                {
+                                                    "name": "code",
+                                                    "type": "editor",
+                                                    "label": "代码："
+                                                },
+                                                {
+                                                    "name": "status",
+                                                    "type": "switch",
+                                                    "label": "开启",
+                                                    value: true
+                                                }
+                                            ]
+                                        }
+                                    },
                                     {
                                         "title": "部署函数",
                                         "hash": "tab1",
@@ -103,18 +132,6 @@
                                         }
                                     },
                                     {
-                                        "title": "下线项目",
-                                        "hash": "tab2",
-                                        "body": {
-                                            "label": "下线",
-                                            "type": "action",
-                                            "actionType": "download",
-                                            "api": {
-                                                url: "/api/boot/func?action=down&project=${project}"
-                                            }
-                                        }
-                                    },
-                                    {
                                         "title": "下载项目",
                                         "hash": "tab3",
                                         "body": {
@@ -124,34 +141,6 @@
                                             "api": {
                                                 url: "/api/boot/func?action=pkg&project=${project}"
                                             }
-                                        }
-                                    },
-                                    {
-                                        "title": "函数更改",
-                                        "hash": "tab4",
-                                        "body": {
-                                            "type": "form",
-                                            "api": {
-                                                url: "/api/boot/func?action=depolyOne&project=${project}"
-                                            },
-                                            "body": [
-                                                {
-                                                    "type": "input-text",
-                                                    "name": "name",
-                                                    "label": "名称："
-                                                },
-                                                {
-                                                    "name": "code",
-                                                    "type": "editor",
-                                                    "label": "代码："
-                                                },
-                                                {
-                                                    "name": "status",
-                                                    "type": "switch",
-                                                    "label": "开启",
-                                                    value: true
-                                                }
-                                            ]
                                         }
                                     },
                                     {
@@ -184,7 +173,20 @@
                                                 url: "/api/boot/func?action=depolyStatic&project=${project}"
                                             }
                                         }
-                                    }
+                                    },
+                                    {
+                                        "title": "下线",
+                                        "hash": "tab2",
+                                        "body": {
+                                            "label": "确认下线项目",
+                                            "type": "action",
+                                            "actionType": "download",
+                                            "level": "danger",
+                                            "api": {
+                                                url: "/api/boot/func?action=down&project=${project}"
+                                            }
+                                        }
+                                    },
                                 ]
                             }
                         ]
