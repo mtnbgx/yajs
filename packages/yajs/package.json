@@ -1,5 +1,5 @@
 {
-  "name": "yajs",
+  "name": "@mtnbgx/yajs",
   "version": "1.0.0",
   "description": "一个基于Nodejs实现的一个自运行的云函数框架",
   "repository": {

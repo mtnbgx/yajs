@@ -19,7 +19,7 @@ Yajs是一个基于Nodejs实现的一个自运行的云函数框架，它允许�
 2. 使用npm安装所需的框架。打开命令行工具，输入以下命令：
 
 ```bash
-npm install yajs --save
+npm install @mtnbgx/yajs --save
 ```
 
 这将安装Yajs框架并将其添加到项目的`package.json`文件中。
@@ -39,7 +39,7 @@ npm init -y
 3. 开始编码，新建文件index.js并填写。
 
 ```bash
-const { Yajs } = require("yajs")
+const { Yajs } = require("@mtnbgx/yajs")
 
 const yajs = new Yajs({
     // config
@@ -51,8 +51,9 @@ yajs.run()
 ```
 你没看错就几行就完成服务端代码了
 
-4. 运行 
+4. 安装依赖和运行 
 ```
+npm i @mtnbgx/yajs
 node index.js
 ```
 
@@ -75,7 +76,7 @@ http://127.0.0.1:3000/pub/boot/
     > 到这里你已经学会boot下的发布云函数了
 ## Cli下发布代码
 ```bash
-    npm i @yajs/cli -g
+    npm i @mtnbgx/yajs-cli -g
     mkdir test
     cd test
     # 查看操作命令
